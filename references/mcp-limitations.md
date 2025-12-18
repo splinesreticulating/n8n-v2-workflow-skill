@@ -58,6 +58,34 @@ The n8n MCP (Model Context Protocol) server integration allows Claude to interac
 - "Execute the content generator with this data"
 - "Test the LinkedIn posting workflow"
 
+**IMPORTANT REQUIREMENT:** MCP access must be enabled for workflows to be executable via MCP.
+
+#### Enabling MCP Access
+
+To make a workflow executable via MCP, it must meet these requirements:
+
+1. **Workflow must be published** (saved and activated)
+2. **Must have one of these trigger nodes:**
+   - Schedule Trigger
+   - Webhook Trigger
+   - Form Trigger
+   - Chat Trigger
+
+**Error if requirements not met:**
+```
+Error updating MCP settings
+MCP access can only be set for published workflows with one of
+the following trigger nodes: Schedule Trigger, Webhook Trigger,
+Form Trigger, Chat Trigger.
+```
+
+**Common issue:** Workflows with Manual Trigger or Execute Workflow Trigger cannot have MCP access enabled.
+
+**Workaround for testing sub-workflows:**
+- Sub-workflows (with Execute Workflow Trigger) cannot be executed directly via MCP
+- Execute them indirectly by running the parent orchestrator workflow
+- Or add a Webhook Trigger temporarily for testing via MCP
+
 ---
 
 ## What the MCP Server CANNOT Do
@@ -406,6 +434,45 @@ mcp__n8n__execute_workflow({
 ### Problem: "MCP can't modify my workflow"
 
 **Solution:** This is expected. Export workflow, modify JSON, re-import via UI.
+
+---
+
+### Problem: "Error updating MCP settings" when enabling MCP access
+
+**Error message:**
+```
+Error updating MCP settings
+MCP access can only be set for published workflows with one of
+the following trigger nodes: Schedule Trigger, Webhook Trigger,
+Form Trigger, Chat Trigger.
+```
+
+**Cause:** Your workflow uses Manual Trigger or Execute Workflow Trigger, which are not compatible with MCP access.
+
+**Solutions:**
+
+**Option 1: Use parent workflow**
+- If this is a sub-workflow, execute the parent orchestrator instead
+- Parent workflow should have a compatible trigger (Schedule, Webhook, Form, or Chat)
+
+**Option 2: Add compatible trigger temporarily**
+- Add a Webhook Trigger to the workflow for testing
+- Configure it to receive test data
+- Enable MCP access
+- Test via MCP
+- Remove Webhook Trigger when done
+
+**Option 3: Use Manual execution**
+- Keep Manual Trigger for workflows that don't need MCP access
+- Execute manually in n8n UI for testing
+
+**Which workflows need MCP access:**
+- Main orchestrator workflows (should use Schedule or Webhook Trigger)
+- Standalone workflows you want to trigger programmatically
+
+**Which workflows DON'T need MCP access:**
+- Sub-workflows (Execute Workflow Trigger) - executed indirectly
+- Testing/helper workflows with Manual Trigger
 
 ---
 
