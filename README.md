@@ -61,7 +61,7 @@ JavaScript snippets for n8n Code nodes:
 1. **Install the skill:**
    ```bash
    # Clone this repository
-   git clone https://github.com/YOUR_USERNAME/n8n-v2-workflow-skill.git
+   git clone https://github.com/splinesreticulating/n8n-v2-workflow-skill.git
 
    # Copy to your Claude skills directory
    cp -r n8n-v2-workflow-skill ~/.claude/skills/n8n-v2
