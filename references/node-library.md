@@ -778,6 +778,10 @@ Example normalization:
 
 **Type:** `n8n-nodes-base.executeWorkflow` (v1)
 
+**UI Label:** "Execute Sub-Workflow" (in node palette)
+
+**Important:** In n8n v2.0+, this node is labeled "Execute Sub-Workflow" in the UI, but the node type in JSON remains `n8n-nodes-base.executeWorkflow`. This is normal and correct.
+
 Call another workflow as a sub-workflow.
 
 **Use cases:**
@@ -805,18 +809,23 @@ Call another workflow as a sub-workflow.
 - `localFile`: Use workflow file
 - `parameter`: Dynamic workflow ID via expression
 
-**CRITICAL ISSUE:** When importing workflow JSON, Execute Workflow nodes often show "out of date" error and must be recreated manually.
+**Import Issue:** When importing workflow JSON, Execute Workflow nodes **sometimes** show "out of date" error after import.
 
-**Workaround:**
+**When this happens:**
+- The node appears with a red error indicator after importing
+- Error message: "This node is out of date. Please upgrade by removing it and adding a new one"
+- This does NOT mean the JSON is wrong - the node type `executeWorkflow` is correct
+
+**Workaround if you see the error:**
 1. Import workflow JSON
-2. Delete Execute Workflow nodes showing errors
-3. Add fresh Execute Workflow nodes from palette
+2. Delete Execute Workflow nodes showing errors (not all of them, only ones with errors)
+3. Add fresh "Execute Sub-Workflow" nodes from palette (same type, just recreated)
 4. Select "Database" as source
 5. Choose target workflow from dropdown
 
-**Best practice:** When creating workflow JSON for import, either:
-- Omit Execute Workflow nodes entirely
-- Document which nodes need manual recreation
+**Best practice:** 
+- Include Execute Workflow nodes normally in your JSON - they usually import fine
+- If you frequently have import issues, consider omitting these nodes and adding manually
 
 **Data flow:**
 ```
